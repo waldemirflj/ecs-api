@@ -1,0 +1,12 @@
+# Node modules
+api/node_modules
+api/package-lock.json
+
+# Adonis directory for storing tmp files
+api/tmp
+
+# Environment variables, never commit this file
+api/.env
+
+# The development sqlite file
+api/database/development.sqlite
