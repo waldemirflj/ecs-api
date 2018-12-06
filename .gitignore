@@ -10,3 +10,6 @@ api/.env
 
 # The development sqlite file
 api/database/development.sqlite
+
+# Docker
+docker
