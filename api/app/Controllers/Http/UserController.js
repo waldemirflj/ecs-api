@@ -4,6 +4,22 @@ const User = use('App/Models/User')
 const { validate } = use('Validator')
 
 class UserController {
+  /**
+  * @swagger
+  * /user:
+  *   get:
+  *     tags:
+  *       - User
+  *     summary: Returns a list of users.
+  *
+  *     responses:
+  *       200:
+  *         description: Ok
+  *         schema:
+  *           type: array
+  *           items:
+  *             $ref: "#/definitions/User"
+  */
   async index ({ request, response }) {
     const users = await User.all()
 
@@ -12,6 +28,39 @@ class UserController {
       .json(users)
   }
 
+  /**
+  * @swagger
+  * /user:
+  *   post:
+  *     tags:
+  *       - User
+  *     summary: Creates a new user.
+  *
+  *     consumes:
+  *       - application/json
+  *
+  *     parameters:
+  *       - in: body
+  *         name: body
+  *         description: The user to create.
+  *         schema:
+  *           $ref: "#/definitions/User"
+  *
+  *     responses:
+  *       201:
+  *         description: Created
+  *         schema:
+  *           type: object
+  *           properties:
+  *             message:
+  *               type: string
+  *       400:
+  *         description: Bad Request
+  *         schema:
+  *           type: array
+  *           items:
+  *             $ref: "#/definitions/Validators"
+  */
   async create ({ request, response }) {
     const {
       username,
@@ -25,12 +74,58 @@ class UserController {
     })
 
     return response
-      .status(202)
+      .status(201)
       .json({
         message: 'Successfully registered.'
       })
   }
 
+  /**
+  * @swagger
+  * /user/{id}:
+  *   put:
+  *     tags:
+  *       - User
+  *     summary: Update a user.
+  *
+  *     consumes:
+  *       - application/json
+  *
+  *     parameters:
+  *       - in: path
+  *         name: id
+  *         required: true
+  *         schema:
+  *           type: integer
+  *           minimum: 1
+  *         description: The user Id
+  *       - in: body
+  *         name: body
+  *         description: The user to create.
+  *         schema:
+  *           properties:
+  *             email:
+  *               type: string
+  *             username:
+  *               type: string
+  *             password:
+  *               type: string
+  *
+  *     responses:
+  *       200:
+  *         description: Ok
+  *         schema:
+  *           type: object
+  *           properties:
+  *             message:
+  *               type: string
+  *       400:
+  *         description: Bad Request
+  *         schema:
+  *           type: array
+  *           items:
+  *             $ref: "#/definitions/Validators"
+  */
   async update ({ request, response, params: { id }}) {
     const rules = { id: 'integer' }
     const validation = await validate({ id }, rules)
@@ -43,12 +138,14 @@ class UserController {
 
     const {
       email,
-      username } = request.all()
+      username,
+      password } = request.all()
     const user = await User.find(id)
 
     if (user) {
       user.username = username
       user.email = email
+      user.password = password
       user.save()
     }
 
@@ -59,6 +156,41 @@ class UserController {
       })
   }
 
+  /**
+  * @swagger
+  * /user/{id}:
+  *   delete:
+  *     tags:
+  *       - User
+  *     summary: Update a user.
+  *
+  *     consumes:
+  *       - application/json
+  *
+  *     parameters:
+  *       - in: path
+  *         name: id
+  *         required: true
+  *         schema:
+  *           type: integer
+  *           minimum: 1
+  *         description: The user Id
+  *
+  *     responses:
+  *       200:
+  *         description: Ok
+  *         schema:
+  *           type: object
+  *           properties:
+  *             message:
+  *               type: string
+  *       400:
+  *         description: Bad Request
+  *         schema:
+  *           type: array
+  *           items:
+  *             $ref: "#/definitions/Validators"
+  */
   async delete ({ request, response, params: { id }}) {
     const rules = { id: 'integer' }
     const validation = await validate({ id }, rules)

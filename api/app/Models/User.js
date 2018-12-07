@@ -6,6 +6,35 @@ const Model = use('Model')
 /** @type {import('@adonisjs/framework/src/Hash')} */
 const Hash = use('Hash')
 
+/**
+* @swagger
+* definitions:
+*   User:
+*     type: object
+*     properties:
+*       id:
+*         type: integer
+*       username:
+*          type: string
+*       email:
+*         type: string
+*       password:
+*         type: string
+*     required:
+*       - username
+*       - email
+*       - password
+*
+*   Validators:
+*     type: object
+*     properties:
+*       message:
+*         type: string
+*       field:
+*         type: string
+*       validation:
+*         type: string
+*/
 class User extends Model {
   static boot () {
     super.boot()
