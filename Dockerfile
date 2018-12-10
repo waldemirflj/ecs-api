@@ -1,23 +1,26 @@
-# 1. Grab the latest node image
+# Grab the latest node image
 FROM node:8.14.0-alpine
 
-# 2. Set the working directory inside the container to /app
+# Set the working directory inside the container to /app
 WORKDIR /app
 
-# 3. Add the .env to the directory (We need those variables)
-ADD .env .
+# Add the .env to the directory (We need those variables)
+# Add package.json to the directory
+COPY [".env", "api/package.json", "./"]
 
-# 5. Add package.json to the directory
-ADD api/package.json .
+# Install dependencies
+RUN npm i -g @adonisjs/cli \
+    && npm i
 
-# 6. Install dependencies
-RUN npm install
-
-# 7. Copy the rest into directory
+# Copy the rest into directory
 COPY api/ .
 
-# 4. Expose port defined in .env file
+# Expose port defined in .env file
 EXPOSE ${PORT}
 
-# 8. Start the app inside the container
-CMD ["npm", "start"]
+COPY docker-entrypoint.sh .
+
+RUN ["chmod", "+x", "/app/docker-entrypoint.sh"]
+
+# Start the app inside the container
+ENTRYPOINT ["/app/docker-entrypoint.sh"] 
