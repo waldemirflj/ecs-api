@@ -21,9 +21,19 @@ module.exports = {
       },
 
       basePath: '/',
+      schemes: [
+        'http',
+        'https',
+      ],
 
       // Example security definitions.
       securityDefinitions: {
+        // Bearer: {
+        //   type: 'apiKey',
+        //   'in': 'header',
+        //   name: 'Authorization'
+        // },
+
         ApiKey: {
           description: 'ApiKey description',
           name: 'Authorization'
